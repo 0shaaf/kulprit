@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-const GROQ_MODEL = "openai/gpt-oss-120b";
+const GROQ_MODEL = "openai/gpt-oss-20b";
 
 const SEED_TOPICS = [
   "Exam Cheating Blame", "Hostel Fridge Milk Theft", "Ruined Final Presentation Slides",
@@ -134,58 +134,73 @@ export async function POST() {
   if (apiKey) {
     const chosenTopic = SEED_TOPICS[Math.floor(Math.random() * SEED_TOPICS.length)];
     const prompt = `
-Create an investigation dispute script based on: "${chosenTopic}".
+You are an expert game designer generating a procedural legal deduction dispute for the game "Kulprit".
 
-STRICT FAIR-PLAY EVIDENCE CONTRACT:
-1. THREE SPECIFIC HUMAN CHARACTERS:
-   - Invent 3 distinct, realistic first names suited for the setting (e.g. A Human Name).
-   - NEVER use the literal word "Name", "c1", or generic placeholders.
-   - Character Roles:
-     * c1: The "Biased Accuser". Makes 2 LOGICAL_FALLACIES targeting c3.
-     * c2: The "Actual Culprit" (culprit_id MUST be "c2"). Makes 2 FACTUAL_CONTRADICTIONS lying about the facts.
-     * c3: The "Innocent Truth-Teller". Makes 2 SOUND statements citing facts from the dossier.
-   - NO 4th PERSON: Only c1, c2, and c3 exist in the entire case.
+OUTPUT STRICT RFC 8259 JSON ONLY. NO MARKDOWN, NO THINK TAGS, NO INTRO/OUTRO.
 
-2. INCIDENT SUMMARY (EXACTLY 3 FACT BULLETS):
-   Must be formatted with linebreaks as:
-   Incident headline
-   • Fact 1 (Timeline/Access): Stating timestamps/logs for @[c2's Name] and @[c3's Name].
-   • Fact 2 (Physical Evidence): Stating forensic proof (fingerprint, chemical, damaged part) linking @[c2's Name].
-   • Fact 3 (Decisive Verification): Stating the camera footage or system log proving @[c2's Name]'s act.
+RULES FOR THE CLOSED EVIDENCE DOSSIER (incident_summary):
+- You must create a dispute involving 3 distinct characters:
+  1. The Accuser (biased, relies on logical fallacies like ad hominem or hasty generalizations).
+  2. The Actual Culprit (lies about timeline or physical evidence).
+  3. The Innocent Person of Interest (truthful, framed by the accuser).
+- The dossier MUST contain exactly 3 objective, verifiable facts:
+  * Fact 1: Timeline / Alibi constraint (e.g., electronic door swipe, login log, receipt time).
+  * Fact 2: Physical / Environmental state (e.g., item location, weight, residue, room layout).
+  * Fact 3: Neutral Corroboration (e.g., third-party log, weather, power outage log).
+- CRITICAL MYSTERY RULE: NEVER state who committed the deed in the facts. NO security camera footage showing the theft/act. NO confessions. The facts must be 100% neutral telemetry. Guilt must ONLY be deductible by catching lies or fallacies in the dialogue.
 
-3. CLOSED EVIDENCE POOL IN DIALOGUE:
-   - Every statement MUST mention other characters by their actual handle: '@' followed immediately by their chosen name (e.g. '@Maya', '@Victor').
-   - Turn t1 (c1 -> c3): LOGICAL_FALLACY attacking c3's mood/habits.
-   - Turn t2 (c2 -> c2): FACTUAL_CONTRADICTION lying about Fact 1.
-   - Turn t3 (c3 -> c2): SOUND citing Fact 2.
-   - Turn t4 (c1 -> c3): LOGICAL_FALLACY attacking c3 with false cause.
-   - Turn t5 (c2 -> c2): FACTUAL_CONTRADICTION lying about Fact 2.
-   - Turn t6 (c3 -> c2): SOUND citing Fact 3.
+RULES FOR DIALOGUE TURNS:
+- Generate 6 to 9 dialogue turns.
+- CRITICAL CHARACTER INTEGRITY: Every statement MUST be spoken by and reference ONLY the 3 characters defined in this scenario. 
+- NEVER use placeholder names (e.g., do NOT mention Alex, Liam, Jordan, or slides/cars unless they are explicitly in the generated characters list and incident).
+- Statements must be conversational disputes (e.g. "@CharacterName claims X, but that makes no sense").
+- Claim types:
+  * "SOUND": Factually correct and logically sound.
+  * "LOGICAL_FALLACY": An invalid causal leap (e.g., "They were stressed, so they stole it").
+  * "FACTUAL_CONTRADICTION": Directly contradicts Fact 1, 2, or 3 from the dossier.
 
-4. BREVITY: Statements under 14 words.
-5. Start immediately with '{' and end with '}'. No markdown backticks.
-
-MIRROR THIS EXACT SCHEMA (replace all bracketed values with your generated scenario content):
+JSON FORMAT SCHEMA:
 {
-  "scenario_title": "string",
-  "incident_summary": "Headline\\n• Fact 1 (Timeline/Access): ...\\n• Fact 2 (Physical Evidence): ...\\n• Fact 3 (Decisive Verification): ...",
-  "ground_truth": {
-    "culprit_id": "c2",
-    "actual_timeline": "string",
-    "decisive_proof": "string"
-  },
+  "scenario_title": "Short punchy title",
+  "incident_summary": "- Fact 1: ...\\n- Fact 2: ...\\n- Fact 3: ...",
   "characters": [
-    { "id": "c1", "name": "Liam", "role": "Accuser", "temperament": "Aggressive", "avatar_color": "#ef4444" },
-    { "id": "c2", "name": "Maya", "role": "Culprit", "temperament": "Evasive", "avatar_color": "#f59e0b" },
-    { "id": "c3", "name": "Victor", "role": "Innocent Witness", "temperament": "Objective", "avatar_color": "#38bdf8" }
+    {
+      "id": "char_1",
+      "name": "Full Name",
+      "role": "Accuser",
+      "temperament": "Aggressive / Defensive / etc",
+      "avatar_color": "#hex"
+    },
+    {
+      "id": "char_2",
+      "name": "Full Name",
+      "role": "Actual Culprit",
+      "temperament": "Evasive / Nervous / etc",
+      "avatar_color": "#hex"
+    },
+    {
+      "id": "char_3",
+      "name": "Full Name",
+      "role": "Innocent Truth-Teller",
+      "temperament": "Calm / Analytical / etc",
+      "avatar_color": "#hex"
+    }
   ],
+  "ground_truth": {
+    "culprit_id": "char_2",
+    "true_sequence": "1-2 sentence explanation of what really happened"
+  },
   "dialogue_turns": [
-    { "claim_id": "t1", "speaker_id": "c1", "target_id": "c3", "stance": "ACCUSES", "statement": "@Victor was nervous all morning, so he obviously caused the break.", "claim_type": "LOGICAL_FALLACY", "flaw_description": "Ad hominem: nervousness is not proof of causing damage.", "concession_dialogue": "Fair point, nervousness proves nothing." },
-    { "claim_id": "t2", "speaker_id": "c2", "target_id": "c2", "stance": "DEFENDS", "statement": "I checked out at 13:00, way before the incident occurred.", "claim_type": "FACTUAL_CONTRADICTION", "flaw_description": "Contradicts Fact 1: door log proves Maya entered at 14:15.", "concession_dialogue": "Okay... the door log does show 14:15." },
-    { "claim_id": "t3", "speaker_id": "c3", "target_id": "c2", "stance": "ACCUSES", "statement": "The broken piece has tool marks matching @Maya's assigned wrench kit.", "claim_type": "SOUND", "flaw_description": "Directly supported by the tool mark match in Fact 2.", "concession_dialogue": "Yes, that wrench kit is registered to me." },
-    { "claim_id": "t4", "speaker_id": "c1", "target_id": "c3", "stance": "ACCUSES", "statement": "@Victor has broken coffee mugs before, so this accident was definitely him.", "claim_type": "LOGICAL_FALLACY", "flaw_description": "Hasty generalization: past broken mugs do not prove this incident.", "concession_dialogue": "True, past accidents don't prove this one." },
-    { "claim_id": "t5", "speaker_id": "c2", "target_id": "c2", "stance": "DEFENDS", "statement": "My wrench kit never left the basement storage locker today.", "claim_type": "FACTUAL_CONTRADICTION", "flaw_description": "Contradicts Fact 2: tool residue was found active at the workbench.", "concession_dialogue": "I brought it upstairs earlier, fine." },
-    { "claim_id": "t6", "speaker_id": "c3", "target_id": "c2", "stance": "ACCUSES", "statement": "Hallway camera feed in Fact 3 shows @Maya carrying the broken item away.", "claim_type": "SOUND", "flaw_description": "Directly verified by the camera recording cited in Fact 3.", "concession_dialogue": "The hallway recording clearly shows me." }
+    {
+      "claim_id": "turn_1",
+      "speaker_id": "char_1",
+      "target_id": "char_3",
+      "statement": "Dialogue line targeting another character by @Name",
+      "claim_type": "LOGICAL_FALLACY",
+      "flaw_description": "Why this statement is flawed or what fact it violates",
+      "stance": "ACCUSES",
+      "concession_dialogue": "What the speaker concedes if sustained"
+    }
   ]
 }
 `;

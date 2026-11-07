@@ -595,7 +595,7 @@ export default function PlayPage() {
                 <div key={msg.id} className="chat-message-row" style={{ alignSelf: "flex-end" }}>
                   <div className="msg-body" style={{ alignItems: "flex-end" }}>
                     <div className="msg-meta">
-                      <span className="msg-author" style={{ color: "var(--accent-blue)" }}>Magistrate Shaaf</span>
+                      <span className="msg-author" style={{ color: "var(--accent-blue)" }}>Magistrate</span>
                       <span className="msg-role-tag">Objection</span>
                     </div>
                     <div className="msg-bubble msg-bubble-objection">

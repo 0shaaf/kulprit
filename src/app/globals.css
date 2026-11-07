@@ -489,6 +489,12 @@ a {
   gap: 6px;
 }
 
+nextjs-portal,
+[data-nextjs-toast],
+[data-nextjs-dev-tools-button] {
+  display: none !important;
+}
+
 /* ==========================================================================
    RESPONSIVE SCALING
    ========================================================================== */

@@ -126,7 +126,7 @@ export default function LandingPage() {
                 <div className="landing-judge-avatar-frame">
                   <img src="/avatars/judge.png" alt="Magistrate" />
                 </div>
-                <div className="magistrate-title">Magistrate Shaaf</div>
+                <div className="magistrate-title">Magistrate</div>
                 <div className="magistrate-subtitle">Judicial Authority</div>
               </div>
 
