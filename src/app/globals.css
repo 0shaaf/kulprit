@@ -443,7 +443,8 @@ a {
   margin: auto 0;
 }
 
-.magistrate-avatar-frame {
+/* Change .magistrate-avatar-frame to: */
+.landing-judge-avatar-frame {
   width: 74px;
   height: 74px;
   border-radius: 50%;
@@ -453,7 +454,7 @@ a {
   margin-bottom: 12px;
 }
 
-.magistrate-avatar-frame img {
+.landing-judge-avatar-frame img {
   width: 100%;
   height: 100%;
   border-radius: 50%;

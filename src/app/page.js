@@ -112,7 +112,7 @@ export default function LandingPage() {
               </div>
             </div>
 
-        
+
             <div className="deck-card card-magistrate">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span className="card-header-badge">Presiding Magistrate</span>
@@ -121,11 +121,12 @@ export default function LandingPage() {
                 </span>
               </div>
 
+              {/* TOP CARD: Magistrate Shaaf */}
               <div className="magistrate-centerpiece">
-                <div className="magistrate-avatar-frame">
+                <div className="landing-judge-avatar-frame">
                   <img src="/avatars/judge.png" alt="Magistrate" />
                 </div>
-                <div className="magistrate-title">Magistrate</div>
+                <div className="magistrate-title">Magistrate Shaaf</div>
                 <div className="magistrate-subtitle">Judicial Authority</div>
               </div>
 
