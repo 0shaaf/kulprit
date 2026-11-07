@@ -233,7 +233,7 @@ JSON FORMAT SCHEMA:
 
       const data = await res.json();
       const rawContent = data.choices?.[0]?.message?.content || "";
-      const parsed = parseAndHealJson(rawContent); // hi
+      const parsed = parseAndHealJson(rawContent); // 
 
       return NextResponse.json(parsed);
     } catch (err) {
